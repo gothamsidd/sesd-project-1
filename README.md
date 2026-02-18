@@ -9,6 +9,7 @@
 - [Target Users](#target-users)
 - [Technology Stack](#technology-stack)
 - [Getting Started](#getting-started)
+- [API Reference](#api-reference)
 - [Backend Architecture and Code Structure](#backend-architecture-and-code-structure)
 - [System Capabilities](#system-capabilities)
 - [Expected Outcome](#expected-outcome)
@@ -125,6 +126,31 @@ npm run dev
 ```
 
 The API will be available at `http://localhost:5000` (or the port set in `.env`).
+
+## API Reference
+
+All protected routes require the `Authorization` header: `Bearer <token>` (obtained from login).
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| **Auth** |
+| POST | `/api/auth/register` | No | Register a new user |
+| POST | `/api/auth/login` | No | Login and receive JWT |
+| **Subjects** |
+| GET | `/api/subjects` | Yes | List user's subjects |
+| POST | `/api/subjects` | Yes | Create a subject |
+| DELETE | `/api/subjects/:id` | Yes | Delete a subject |
+| **Tasks** |
+| GET | `/api/tasks` | Yes | List user's tasks |
+| POST | `/api/tasks` | Yes | Create a task |
+| PUT | `/api/tasks/:id` | Yes | Update a task |
+| DELETE | `/api/tasks/:id` | Yes | Delete a task |
+| **Sessions** |
+| POST | `/api/sessions/start` | Yes | Start a study session |
+| GET | `/api/sessions` | Yes | List user's sessions |
+| PUT | `/api/sessions/:id/end` | Yes | End a study session |
+
+Use **Postman** or any REST client to test the API.
 
 ## Backend Architecture and Code Structure
 
