@@ -8,6 +8,7 @@
 - [User Roles and Workflow](#user-roles-and-workflow)
 - [Target Users](#target-users)
 - [Technology Stack](#technology-stack)
+- [Getting Started](#getting-started)
 - [Backend Architecture and Code Structure](#backend-architecture-and-code-structure)
 - [System Capabilities](#system-capabilities)
 - [Expected Outcome](#expected-outcome)
@@ -85,6 +86,45 @@ The system ensures secure access using JWT authentication and enforces proper da
 - VS Code
 - Git and GitHub
 - Postman
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or later recommended)
+- MongoDB (local instance or [MongoDB Atlas](https://www.mongodb.com/atlas))
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/gothamsidd/sesd-milestone-1.git
+cd sesd-milestone-1
+
+# Install dependencies
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file in the project root with:
+
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/study-planner
+JWT_SECRET=your-secret-key-here
+```
+
+Replace `MONGO_URI` with your MongoDB connection string and set a strong `JWT_SECRET` for production.
+
+### Running the Server
+
+```bash
+npm run dev
+```
+
+The API will be available at `http://localhost:5000` (or the port set in `.env`).
 
 ## Backend Architecture and Code Structure
 
