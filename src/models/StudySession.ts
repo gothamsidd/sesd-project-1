@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IStudySession extends Document {
   userId: Types.ObjectId;
-  subjectId: Types.ObjectId;
+  subjectId?: Types.ObjectId;
   startTime: Date;
   endTime?: Date;
   duration?: number;
@@ -18,7 +18,7 @@ const schema = new Schema<IStudySession>(
     subjectId: {
       type: Schema.Types.ObjectId,
       ref: "Subject",
-      required: true
+      required: false
     },
     startTime: { type: Date, required: true },
     endTime: Date,

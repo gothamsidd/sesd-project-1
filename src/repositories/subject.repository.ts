@@ -9,7 +9,11 @@ export class SubjectRepository {
     return Subject.find({ userId });
   }
 
-  async delete(id: string) {
-    return Subject.findByIdAndDelete(id);
+  async findById(id: string, userId: string) {
+    return Subject.findOne({ _id: id, userId });
+  }
+
+  async delete(id: string, userId: string) {
+    return Subject.findOneAndDelete({ _id: id, userId });
   }
 }

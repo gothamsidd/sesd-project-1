@@ -2,29 +2,27 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface ITask extends Document {
   title: string;
-  description?: string;
-  status: string;
-  deadline?: Date;
-  userId?: Types.ObjectId;
-  subjectId?: Types.ObjectId;
+  completed: boolean;
+  userId: Types.ObjectId;
+  subjectId: Types.ObjectId;
 }
 
 const schema = new Schema<ITask>(
   {
     title: { type: String, required: true },
-    description: String,
-    status: {
-      type: String,
-      default: "pending"
+    completed: {
+      type: Boolean,
+      default: false
     },
-    deadline: Date,
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      required: true
     },
     subjectId: {
       type: Schema.Types.ObjectId,
-      ref: "Subject"
+      ref: "Subject",
+      required: true
     }
   },
   { timestamps: true }

@@ -9,11 +9,13 @@ export class SessionRepository {
     return StudySession.find({ userId });
   }
 
-  async findById(id: string) {
-    return StudySession.findById(id);
+  async findById(id: string, userId: string) {
+    return StudySession.findOne({ _id: id, userId });
   }
 
-  async update(id: string, data: any) {
-    return StudySession.findByIdAndUpdate(id, data, { new: true });
+  async update(id: string, userId: string, data: any) {
+    return StudySession.findOneAndUpdate({ _id: id, userId }, data, {
+      new: true
+    });
   }
 }

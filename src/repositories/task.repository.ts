@@ -9,11 +9,15 @@ export class TaskRepository {
     return Task.find({ userId });
   }
 
-  async update(id: string, data: any) {
-    return Task.findByIdAndUpdate(id, data, { new: true });
+  async findById(id: string, userId: string) {
+    return Task.findOne({ _id: id, userId });
   }
 
-  async delete(id: string) {
-    return Task.findByIdAndDelete(id);
+  async update(id: string, userId: string, data: any) {
+    return Task.findOneAndUpdate({ _id: id, userId }, data, { new: true });
+  }
+
+  async delete(id: string, userId: string) {
+    return Task.findOneAndDelete({ _id: id, userId });
   }
 }

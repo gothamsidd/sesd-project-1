@@ -11,8 +11,8 @@ export class SubjectService {
     return this.repo.findByUser(userId);
   }
 
-  async delete(id: string) {
-    return this.repo.delete(id);
+  async delete(id: string, userId: string) {
+    return this.repo.delete(id, userId);
   }
 }
 

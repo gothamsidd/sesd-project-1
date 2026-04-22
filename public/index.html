@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Planner</title>
+  <meta name="description" content="A secure, scalable study planner to manage subjects, tasks, and study sessions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <!-- ========== AUTH VIEW ========== -->
+  <div id="auth-view" class="view active">
+    <div class="auth-container">
+      <div class="auth-brand">
+        <div class="brand-icon">📚</div>
+        <h1>Study Planner</h1>
+        <p>Organize your studies, track your progress</p>
+      </div>
+      <div class="auth-card glass-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form hidden">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+
+        <div id="auth-error" class="error-msg hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== APP VIEW ========== -->
+  <div id="app-view" class="view">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar glass-card">
+      <div class="sidebar-brand">
+        <span class="brand-icon-sm">📚</span>
+        <span class="brand-text">Study Planner</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-page="dashboard"><span class="nav-icon">📊</span> Dashboard</a></li>
+        <li><a href="#" class="nav-link" data-page="subjects"><span class="nav-icon">📖</span> Subjects</a></li>
+        <li><a href="#" class="nav-link" data-page="tasks"><span class="nav-icon">✅</span> Tasks</a></li>
+        <li><a href="#" class="nav-link" data-page="sessions"><span class="nav-icon">⏱️</span> Sessions</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline btn-full">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+
+      <!-- ===== DASHBOARD PAGE ===== -->
+      <section id="page-dashboard" class="page active">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+          <p class="page-subtitle">Welcome back! Here's your study overview.</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card glass-card">
+            <div class="stat-icon">📖</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-subjects">0</span>
+              <span class="stat-label">Subjects</span>
+            </div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-tasks">0</span>
+              <span class="stat-label">Tasks</span>
+            </div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-completed">0</span>
+              <span class="stat-label">Completed</span>
+            </div>
+          </div>
+          <div class="stat-card glass-card">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-info">
+              <span class="stat-value" id="stat-sessions">0</span>
+              <span class="stat-label">Sessions</span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <h3>Recent Subjects</h3>
+            <ul id="recent-subjects" class="item-list"><li class="empty-state">No subjects yet</li></ul>
+          </div>
+          <div class="glass-card">
+            <h3>Recent Tasks</h3>
+            <ul id="recent-tasks" class="item-list"><li class="empty-state">No tasks yet</li></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SUBJECTS PAGE ===== -->
+      <section id="page-subjects" class="page">
+        <div class="page-header">
+          <h2>Subjects</h2>
+          <button id="add-subject-btn" class="btn btn-primary">+ New Subject</button>
+        </div>
+        <!-- Add Subject Modal -->
+        <div id="subject-modal" class="modal-overlay hidden">
+          <div class="modal glass-card">
+            <h3>Add Subject</h3>
+            <form id="subject-form">
+              <div class="form-group">
+                <label for="subject-name">Subject Name</label>
+                <input type="text" id="subject-name" placeholder="e.g. Mathematics" required />
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn btn-outline" id="cancel-subject">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="subjects-list" class="cards-grid">
+          <div class="empty-state-large glass-card">
+            <span>📖</span><p>No subjects yet. Create your first one!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TASKS PAGE ===== -->
+      <section id="page-tasks" class="page">
+        <div class="page-header">
+          <h2>Tasks</h2>
+          <button id="add-task-btn" class="btn btn-primary">+ New Task</button>
+        </div>
+        <!-- Add Task Modal -->
+        <div id="task-modal" class="modal-overlay hidden">
+          <div class="modal glass-card">
+            <h3 id="task-modal-title">Add Task</h3>
+            <form id="task-form">
+              <input type="hidden" id="task-edit-id" />
+              <div class="form-group">
+                <label for="task-title">Task Title</label>
+                <input type="text" id="task-title" placeholder="e.g. Complete Chapter 5" required />
+              </div>
+              <div class="form-group">
+                <label for="task-subject">Subject</label>
+                <select id="task-subject" required>
+                  <option value="">Select a subject</option>
+                </select>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn btn-outline" id="cancel-task">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="tasks-list" class="tasks-container">
+          <div class="empty-state-large glass-card">
+            <span>✅</span><p>No tasks yet. Create your first one!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SESSIONS PAGE ===== -->
+      <section id="page-sessions" class="page">
+        <div class="page-header">
+          <h2>Study Sessions</h2>
+        </div>
+        <div class="session-controls glass-card">
+          <div class="session-timer">
+            <span id="timer-display">00:00:00</span>
+          </div>
+          <div class="session-actions">
+            <select id="session-subject">
+              <option value="">No subject (general)</option>
+            </select>
+            <button id="start-session-btn" class="btn btn-primary">▶ Start Session</button>
+            <button id="stop-session-btn" class="btn btn-danger hidden">■ Stop Session</button>
+          </div>
+        </div>
+        <h3 class="section-title">Session History</h3>
+        <div id="sessions-list" class="sessions-history">
+          <div class="empty-state-large glass-card">
+            <span>⏱️</span><p>No sessions yet. Start studying!</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

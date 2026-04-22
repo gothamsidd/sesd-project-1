@@ -1,241 +1,156 @@
-# Study Planner System — A Secure Backend-Focused Study Management Platform
+# 📚 Study Planner
 
-## Table of Contents
+A backend-focused study management system that helps students organize subjects, track tasks, and log study sessions — all behind a secure, token-based API.
 
-- [Problem Statement](#problem-statement)
-- [Proposed Solution](#proposed-solution)
-- [Key Features](#key-features)
-- [User Roles and Workflow](#user-roles-and-workflow)
-- [Target Users](#target-users)
-- [Technology Stack](#technology-stack)
-- [Getting Started](#getting-started)
-- [API Reference](#api-reference)
-- [Backend Architecture and Code Structure](#backend-architecture-and-code-structure)
-- [System Capabilities](#system-capabilities)
-- [Expected Outcome](#expected-outcome)
-- [Development Timeline](#development-timeline)
-- [Additional Notes](#additional-notes)
-- [Disclaimer](#disclaimer)
+Built with **Node.js**, **TypeScript**, **Express**, and **MongoDB**.
 
-## Problem Statement
+---
 
-Most student productivity or planner applications focus only on simple CRUD operations such as creating tasks or displaying lists. While these applications demonstrate basic functionality, they fail to address important backend engineering challenges such as:
+## What It Does
 
-- Secure user authentication and access control
-- Structured relationships between users, subjects, and tasks
-- Persistent tracking of study sessions
-- Proper backend architecture using layered design
-- Maintainable and scalable code organization
+- **Users** register and log in securely (JWT + bcrypt)
+- **Subjects** represent study areas (Math, History, etc.)
+- **Tasks** are study goals linked to subjects
+- **Study Sessions** track real study activity with a live timer and auto-calculated duration
 
-In real-world productivity platforms, the complexity lies in system architecture, secure API design, data modeling, and structured backend logic, rather than just frontend interfaces.
+All data is user-specific — one user can never see another's data.
 
-## Proposed Solution
+---
 
-The Study Planner System is a backend-focused study management platform designed to help users organize their study workflow in a structured and secure manner.
+## Tech Stack
 
-Instead of treating tasks as isolated records, the system models study activity using clearly defined entities:
+| Layer       | Technology                      |
+|-------------|----------------------------------|
+| Runtime     | Node.js + TypeScript             |
+| Framework   | Express.js (v5)                  |
+| Database    | MongoDB + Mongoose               |
+| Auth        | JWT + bcrypt                     |
+| Frontend    | Vanilla HTML/CSS/JS (dark theme) |
 
-- **Users** own subjects
-- **Subjects** contain tasks
-- **Tasks** represent planned study goals
-- **Study sessions** track actual study activity
+---
 
-The system ensures secure access using JWT authentication and enforces proper data ownership.
+## Project Structure
 
-## Key Features
+```
+src/
+├── controllers/     # Handle HTTP requests
+├── services/        # Business logic
+├── repositories/    # Database queries
+├── models/          # Mongoose schemas
+├── routes/          # API route definitions
+├── middlewares/      # Auth & error handling
+├── config/          # DB connection
+├── app.ts           # Express setup
+└── server.ts        # Entry point
 
-- Secure user registration and login using JWT authentication
-- Subject management for organizing study areas
-- Task creation, updating, deletion, and completion tracking
-- Study session tracking with start and end time recording
-- Automatic calculation of study session duration
-- User-specific data isolation and access control
-- Backend-first architecture with clean layered design
+public/              # Frontend (served as static files)
+├── index.html
+├── css/style.css
+└── js/app.js
+```
 
-## User Roles and Workflow
-
-**User**
-
-- Register and login securely
-- Create and manage subjects
-- Create and manage study tasks
-- Mark tasks as completed
-- Start and end study sessions
-- View study history and progress
-
-## Target Users
-
-- Students managing daily study plans
-- Developers learning backend system design
-- Academic projects requiring structured backend implementation
-- Recruiters evaluating backend engineering skills
-
-## Technology Stack
-
-**Backend**
-
-- Node.js
-- TypeScript
-- Express.js
-- MongoDB
-- Mongoose ORM
-- JWT Authentication
-- bcrypt for password hashing
-
-**Development Tools**
-
-- VS Code
-- Git and GitHub
-- Postman
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or later recommended)
-- MongoDB (local instance or [MongoDB Atlas](https://www.mongodb.com/atlas))
-- npm or yarn
+- Node.js (v18+)
+- MongoDB (local or [Atlas](https://www.mongodb.com/atlas))
 
-### Installation
+### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/gothamsidd/sesd-milestone-1.git
-cd sesd-milestone-1
+# Clone the repo
+git clone https://github.com/gothamsidd/sesd-project-1.git
+cd sesd-project-1
 
 # Install dependencies
 npm install
+
+# Create your environment file
+cp .env.example .env
 ```
 
-### Environment Variables
-
-Create a `.env` file in the project root with:
+Edit `.env` with your MongoDB connection string and a JWT secret:
 
 ```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/study-planner
-JWT_SECRET=your-secret-key-here
+PORT=3000
+MONGO_URI=mongodb+srv://your_user:your_pass@cluster0.mongodb.net/study-planner
+JWT_SECRET=some_random_secret_string
 ```
 
-Replace `MONGO_URI` with your MongoDB connection string and set a strong `JWT_SECRET` for production.
-
-### Running the Server
+### Run
 
 ```bash
 npm run dev
 ```
 
-The API will be available at `http://localhost:5000` (or the port set in `.env`).
+Open **http://localhost:3000** in your browser.
 
-## API Reference
+---
 
-All protected routes require the `Authorization` header: `Bearer <token>` (obtained from login).
+## API Endpoints
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| **Auth** |
-| POST | `/api/auth/register` | No | Register a new user |
-| POST | `/api/auth/login` | No | Login and receive JWT |
-| **Subjects** |
-| GET | `/api/subjects` | Yes | List user's subjects |
-| POST | `/api/subjects` | Yes | Create a subject |
-| DELETE | `/api/subjects/:id` | Yes | Delete a subject |
-| **Tasks** |
-| GET | `/api/tasks` | Yes | List user's tasks |
-| POST | `/api/tasks` | Yes | Create a task |
-| PUT | `/api/tasks/:id` | Yes | Update a task |
-| DELETE | `/api/tasks/:id` | Yes | Delete a task |
-| **Sessions** |
-| POST | `/api/sessions/start` | Yes | Start a study session |
-| GET | `/api/sessions` | Yes | List user's sessions |
-| PUT | `/api/sessions/:id/end` | Yes | End a study session |
+All routes except auth require a `Bearer` token in the `Authorization` header.
 
-Use **Postman** or any REST client to test the API.
+### Auth
+| Method | Route                  | Description         |
+|--------|------------------------|---------------------|
+| POST   | `/api/auth/register`   | Create an account   |
+| POST   | `/api/auth/login`      | Login, get JWT      |
 
-## Backend Architecture and Code Structure
+### Subjects
+| Method | Route                  | Description              |
+|--------|------------------------|--------------------------|
+| GET    | `/api/subjects`        | Get your subjects        |
+| POST   | `/api/subjects`        | Create a subject         |
+| DELETE | `/api/subjects/:id`    | Delete a subject         |
 
-The backend is implemented using a layered architecture to ensure scalability, maintainability, and separation of concerns.
+### Tasks
+| Method | Route                  | Description              |
+|--------|------------------------|--------------------------|
+| GET    | `/api/tasks`           | Get your tasks           |
+| POST   | `/api/tasks`           | Create a task            |
+| PUT    | `/api/tasks/:id`       | Update a task            |
+| DELETE | `/api/tasks/:id`       | Delete a task            |
 
-The main layers include:
+### Study Sessions
+| Method | Route                     | Description              |
+|--------|---------------------------|--------------------------|
+| POST   | `/api/sessions/start`     | Start a session          |
+| PUT    | `/api/sessions/:id/end`   | End a session            |
+| GET    | `/api/sessions`           | Get session history      |
 
-### Controllers
+---
 
-Handle incoming HTTP requests and return responses.
+## Architecture
 
-- AuthController
-- TaskController
-- SubjectController
-- SessionController
+The backend follows a **layered architecture** to keep things clean and maintainable:
 
-### Services
+1. **Controllers** — receive requests, return responses
+2. **Services** — hold the business logic (e.g. "does this subject belong to the user?")
+3. **Repositories** — talk to MongoDB
+4. **Models** — define the data shape (Mongoose schemas)
 
-Contain business logic and coordinate operations between controllers and repositories.
+Every query filters by `userId` to enforce strict data isolation.
 
-- AuthService
-- TaskService
-- SubjectService
-- SessionService
+---
 
-### Repositories
+## Frontend
 
-Handle database operations and interact with MongoDB.
+A single-page app with a dark theme, served directly from the Express server. It includes:
 
-- UserRepository
-- TaskRepository
-- SubjectRepository
-- SessionRepository
+- Login / Register flow
+- Dashboard with stats
+- Subject management
+- Task list with completion toggles
+- Study session timer with history
 
-### Models
+No framework — just HTML, CSS, and JavaScript.
 
-Define the database schema and structure of entities.
+---
 
-- User
-- Subject
-- Task
-- StudySession
+## License
 
-This architecture improves:
-
-- Code maintainability
-- Scalability
-- Separation of responsibilities
-- System clarity
-
-## System Capabilities
-
-The system supports:
-
-- Secure authentication using JWT tokens
-- Protected routes using authentication middleware
-- Persistent data storage in MongoDB
-- Structured relationships between entities
-- Clean and modular backend code organization
-
-## Expected Outcome
-
-A fully functional backend system that:
-
-- Demonstrates clean architecture principles
-- Implements secure authentication and authorization
-- Uses proper database schema design
-- Follows object-oriented and modular design principles
-- Reflects real-world backend development practices
-
-## Development Timeline
-
-- **Phase 1:** Backend setup and MongoDB schema design
-- **Phase 2:** User authentication using JWT
-- **Phase 3:** Subject and task management implementation
-- **Phase 4:** Study session tracking implementation
-- **Phase 5:** Testing and GitHub deployment
-
-## Additional Notes
-
-- The project follows a backend-first development approach
-- Focus is on backend architecture and system design
-- Frontend can be added later as a separate layer
-- Designed to demonstrate real-world backend engineering practices
-
-## Disclaimer
-
-This project is designed as a backend system design and engineering learning project. It focuses on demonstrating clean architecture, secure authentication, and structured backend implementation rather than frontend complexity.
+ISC

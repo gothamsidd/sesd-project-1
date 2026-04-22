@@ -1,30 +1,33 @@
-import { Response } from "express";
+import { Response, NextFunction } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
 import { SessionService } from "../services/session.service";
 
 const service = new SessionService();
 
 export class SessionController {
-  start = async (req: AuthRequest, res: Response) => {
-    res.json(
-      await service.start(
-        req.userId!,
-        req.body.subjectId
-      )
-    );
+  start = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      res.status(201).json(await service.start(req.userId!, req.body.subjectId));
+    } catch (e) {
+      next(e);
+    }
   };
 
-  getAll = async (req: AuthRequest, res: Response) => {
-    res.json(await service.getAll(req.userId!));
+  getAll = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+      res.json(await service.getAll(req.userId!));
+    } catch (e) {
+      next(e);
+    }
   };
 
-  end = async (req: AuthRequest, res: Response) => {
+  end = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id as string;
-      const session = await service.end(id);
+      const session = await service.end(id, req.userId!);
       res.json(session);
-    } catch (e: any) {
-      res.status(400).json({ message: e.message });
+    } catch (e) {
+      next(e);
     }
   };
 }
