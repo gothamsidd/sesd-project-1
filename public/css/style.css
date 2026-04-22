@@ -1,9 +1,6 @@
-/* ============================
-   STUDY PLANNER — Design System
-   ============================ */
+/* --- variables --- */
 
 :root {
-  /* Colors */
   --bg-primary: #0f0f1a;
   --bg-secondary: #1a1a2e;
   --bg-card: rgba(255, 255, 255, 0.05);
@@ -18,20 +15,17 @@
   --success: #2ecc71;
   --danger: #e74c3c;
   --warning: #f39c12;
-
-  /* Spacing */
   --radius: 14px;
   --radius-sm: 8px;
   --sidebar-width: 250px;
-
-  /* Transitions */
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================
-   Reset & Base
-   ============================ */
-*, *::before, *::after {
+/* --- reset --- */
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -51,6 +45,7 @@ body {
   line-height: 1.6;
 }
 
+/* subtle animated bg gradient */
 body::before {
   content: '';
   position: fixed;
@@ -59,27 +54,48 @@ body::before {
   width: 200%;
   height: 200%;
   background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.06) 0%, transparent 50%),
-              radial-gradient(circle at 50% 80%, rgba(102, 126, 234, 0.04) 0%, transparent 50%);
+    radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(102, 126, 234, 0.04) 0%, transparent 50%);
   z-index: -1;
   animation: bgDrift 20s ease-in-out infinite alternate;
 }
 
 @keyframes bgDrift {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(-2%, -2%) rotate(3deg); }
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-2%, -2%) rotate(3deg);
+  }
 }
 
-a { color: var(--accent); text-decoration: none; }
-ul { list-style: none; }
-button { cursor: pointer; font-family: inherit; }
-input, select, textarea { font-family: inherit; }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
-.hidden { display: none !important; }
+ul {
+  list-style: none;
+}
 
-/* ============================
-   Glass Card
-   ============================ */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* --- glass card (reused everywhere) --- */
+
 .glass-card {
   background: var(--bg-card);
   backdrop-filter: blur(20px);
@@ -95,15 +111,18 @@ input, select, textarea { font-family: inherit; }
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* ============================
-   Views
-   ============================ */
-.view { display: none; }
-.view.active { display: flex; }
+/* --- views (only one visible at a time) --- */
 
-/* ============================
-   AUTH VIEW
-   ============================ */
+.view {
+  display: none;
+}
+
+.view.active {
+  display: flex;
+}
+
+/* --- auth page --- */
+
 #auth-view {
   min-height: 100vh;
   align-items: center;
@@ -119,8 +138,15 @@ input, select, textarea { font-family: inherit; }
 }
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-brand {
@@ -135,8 +161,15 @@ input, select, textarea { font-family: inherit; }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .auth-brand h1 {
@@ -188,11 +221,14 @@ input, select, textarea { font-family: inherit; }
   color: var(--text-primary);
 }
 
-.auth-form { display: flex; flex-direction: column; gap: 1rem; }
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-/* ============================
-   Form Elements
-   ============================ */
+/* --- forms --- */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -249,9 +285,8 @@ select option {
   color: var(--text-primary);
 }
 
-/* ============================
-   Buttons
-   ============================ */
+/* --- buttons --- */
+
 .btn {
   padding: 0.7rem 1.4rem;
   border: none;
@@ -307,7 +342,9 @@ select option {
   font-size: 0.8rem;
 }
 
-.btn-full { width: 100%; }
+.btn-full {
+  width: 100%;
+}
 
 .btn-icon {
   background: transparent;
@@ -340,9 +377,8 @@ select option {
   text-align: center;
 }
 
-/* ============================
-   APP LAYOUT
-   ============================ */
+/* --- app layout --- */
+
 #app-view {
   min-height: 100vh;
 }
@@ -372,7 +408,9 @@ select option {
   margin-bottom: 1rem;
 }
 
-.brand-icon-sm { font-size: 1.5rem; }
+.brand-icon-sm {
+  font-size: 1.5rem;
+}
 
 .brand-text {
   font-weight: 700;
@@ -412,24 +450,31 @@ select option {
   color: #fff;
 }
 
-.nav-icon { font-size: 1.1rem; }
+.nav-icon {
+  font-size: 1.1rem;
+}
 
 .sidebar-footer {
   padding-top: 1rem;
   border-top: 1px solid var(--border-color);
 }
 
-/* ============================
-   Main Content
-   ============================ */
+/* --- main content area --- */
+
 .main-content {
   margin-left: var(--sidebar-width);
   padding: 2rem 2.5rem;
   min-height: 100vh;
 }
 
-.page { display: none; animation: fadeSlideUp 0.4s ease-out; }
-.page.active { display: block; }
+.page {
+  display: none;
+  animation: fadeSlideUp 0.4s ease-out;
+}
+
+.page.active {
+  display: block;
+}
 
 .page-header {
   display: flex;
@@ -455,9 +500,8 @@ select option {
   color: var(--text-secondary);
 }
 
-/* ============================
-   Stats Grid
-   ============================ */
+/* --- stats cards on dashboard --- */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -502,9 +546,8 @@ select option {
   margin-top: 0.2rem;
 }
 
-/* ============================
-   Dashboard Grid
-   ============================ */
+/* dashboard two-column layout */
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -518,9 +561,8 @@ select option {
   color: var(--text-secondary);
 }
 
-/* ============================
-   Item Lists
-   ============================ */
+/* --- lists --- */
+
 .item-list {
   display: flex;
   flex-direction: column;
@@ -569,9 +611,8 @@ select option {
   font-size: 0.95rem;
 }
 
-/* ============================
-   Cards Grid (Subjects)
-   ============================ */
+/* --- subject cards --- */
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -607,9 +648,8 @@ select option {
   font-size: 1rem;
 }
 
-/* ============================
-   Tasks
-   ============================ */
+/* --- tasks --- */
+
 .tasks-container {
   display: flex;
   flex-direction: column;
@@ -671,9 +711,8 @@ select option {
   gap: 0.4rem;
 }
 
-/* ============================
-   Sessions
-   ============================ */
+/* --- sessions --- */
+
 .session-controls {
   text-align: center;
   padding: 2.5rem;
@@ -754,13 +793,19 @@ select option {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
-/* ============================
-   Modal
-   ============================ */
+/* --- modals --- */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -777,8 +822,13 @@ select option {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -789,8 +839,15 @@ select option {
 }
 
 @keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal h3 {
@@ -805,9 +862,8 @@ select option {
   margin-top: 1.5rem;
 }
 
-/* ============================
-   Toast Notification
-   ============================ */
+/* --- toast notifications --- */
+
 .toast {
   position: fixed;
   bottom: 2rem;
@@ -834,13 +890,19 @@ select option {
 }
 
 @keyframes toastIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ============================
-   Responsive
-   ============================ */
+/* --- mobile --- */
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -855,7 +917,10 @@ select option {
     border-top: 1px solid var(--border-color);
   }
 
-  .sidebar-brand, .sidebar-footer { display: none; }
+  .sidebar-brand,
+  .sidebar-footer {
+    display: none;
+  }
 
   .nav-links {
     flex-direction: row;
@@ -875,8 +940,15 @@ select option {
     padding: 1.5rem 1rem 5rem;
   }
 
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 
-  #timer-display { font-size: 2.5rem; }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  #timer-display {
+    font-size: 2.5rem;
+  }
 }

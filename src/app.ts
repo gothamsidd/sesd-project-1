@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static frontend files — works from both src/ and dist/
+// serve frontend
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/api/auth", authRoutes);

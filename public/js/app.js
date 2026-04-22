@@ -1,10 +1,6 @@
-/* ============================
-   Study Planner — Frontend App
-   ============================ */
+const API = '';
 
-const API = '';  // same origin
-
-// ---- State ----
+// app state
 let token = localStorage.getItem('sp_token') || null;
 let subjects = [];
 let tasks = [];
@@ -12,7 +8,8 @@ let sessions = [];
 let activeSession = null;
 let timerInterval = null;
 
-// ---- Utility ----
+// helpers
+
 function headers() {
     return {
         'Content-Type': 'application/json',
@@ -50,9 +47,8 @@ function formatDate(dateStr) {
     return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-// ===================================
-// AUTH
-// ===================================
+// auth
+
 function initAuth() {
     const tabs = document.querySelectorAll('.auth-tab');
     const loginForm = document.getElementById('login-form');
@@ -99,7 +95,6 @@ function initAuth() {
         try {
             await api('POST', '/api/auth/register', { name, email, password });
             showToast('Account created! Please login.');
-            // Switch to login tab
             tabs[0].click();
         } catch (err) {
             authError.textContent = err.message;
@@ -108,9 +103,8 @@ function initAuth() {
     });
 }
 
-// ===================================
-// NAVIGATION
-// ===================================
+// navigation
+
 function initNav() {
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
@@ -136,9 +130,6 @@ function initNav() {
     });
 }
 
-// ===================================
-// SHOW AUTH / APP
-// ===================================
 function showAuth() {
     document.getElementById('auth-view').classList.add('active');
     document.getElementById('app-view').classList.remove('active');
@@ -150,9 +141,8 @@ function showApp() {
     loadDashboard();
 }
 
-// ===================================
-// DASHBOARD
-// ===================================
+// dashboard
+
 async function loadDashboard() {
     try {
         [subjects, tasks, sessions] = await Promise.all([
@@ -166,7 +156,6 @@ async function loadDashboard() {
         document.getElementById('stat-completed').textContent = tasks.filter(t => t.completed).length;
         document.getElementById('stat-sessions').textContent = sessions.length;
 
-        // Recent subjects
         const recentSubjects = document.getElementById('recent-subjects');
         if (subjects.length === 0) {
             recentSubjects.innerHTML = '<li class="empty-state">No subjects yet</li>';
@@ -176,7 +165,6 @@ async function loadDashboard() {
             ).join('');
         }
 
-        // Recent tasks
         const recentTasks = document.getElementById('recent-tasks');
         if (tasks.length === 0) {
             recentTasks.innerHTML = '<li class="empty-state">No tasks yet</li>';
@@ -193,9 +181,8 @@ async function loadDashboard() {
     }
 }
 
-// ===================================
-// SUBJECTS
-// ===================================
+// subjects
+
 function initSubjects() {
     const modal = document.getElementById('subject-modal');
     const form = document.getElementById('subject-form');
@@ -266,9 +253,8 @@ window.deleteSubject = async function (id) {
     }
 };
 
-// ===================================
-// TASKS
-// ===================================
+// tasks
+
 function initTasks() {
     const modal = document.getElementById('task-modal');
     const form = document.getElementById('task-form');
@@ -320,10 +306,10 @@ function initTasks() {
 function populateSubjectDropdown(selectId) {
     const select = document.getElementById(selectId);
     const currentVal = select.value;
-    const opts = selectId === 'session-subject'
+    const defaultOpt = selectId === 'session-subject'
         ? '<option value="">No subject (general)</option>'
         : '<option value="">Select a subject</option>';
-    select.innerHTML = opts + subjects.map(s =>
+    select.innerHTML = defaultOpt + subjects.map(s =>
         `<option value="${s._id}">${s.name}</option>`
     ).join('');
     if (currentVal) select.value = currentVal;
@@ -396,9 +382,8 @@ window.deleteTask = async function (id) {
     }
 };
 
-// ===================================
-// SESSIONS
-// ===================================
+// sessions
+
 function initSessions() {
     document.getElementById('start-session-btn').addEventListener('click', startSession);
     document.getElementById('stop-session-btn').addEventListener('click', stopSession);
@@ -468,7 +453,7 @@ async function loadSessions() {
         const subjectMap = {};
         subjects.forEach(s => subjectMap[s._id] = s.name);
 
-        // Check for an active session (no endTime)
+        // check if there's already an active session we should resume
         const active = sessions.find(s => !s.endTime);
         if (active && !activeSession) {
             activeSession = active;
@@ -477,26 +462,27 @@ async function loadSessions() {
             startTimer();
         }
 
-        list.innerHTML = sessions.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()).map(s => `
-      <div class="session-item glass-card">
-        <div class="session-item-info">
-          <span class="session-item-subject">${subjectMap[s.subjectId] || 'General Study'}</span>
-          <span class="session-item-time">${formatDate(s.startTime)}${s.endTime ? ' — ' + formatDate(s.endTime) : ''}</span>
+        list.innerHTML = sessions
+            .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+            .map(s => `
+        <div class="session-item glass-card">
+          <div class="session-item-info">
+            <span class="session-item-subject">${subjectMap[s.subjectId] || 'General Study'}</span>
+            <span class="session-item-time">${formatDate(s.startTime)}${s.endTime ? ' — ' + formatDate(s.endTime) : ''}</span>
+          </div>
+          ${s.endTime
+                    ? `<span class="session-item-duration">${formatDuration(s.duration)}</span>`
+                    : `<span class="session-active-badge">● Active</span>`
+                }
         </div>
-        ${s.endTime
-                ? `<span class="session-item-duration">${formatDuration(s.duration)}</span>`
-                : `<span class="session-active-badge">● Active</span>`
-            }
-      </div>
-    `).join('');
+      `).join('');
     } catch (err) {
         showToast(err.message, 'error');
     }
 }
 
-// ===================================
-// INIT
-// ===================================
+// boot
+
 document.addEventListener('DOMContentLoaded', () => {
     initAuth();
     initNav();
@@ -504,7 +490,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initTasks();
     initSessions();
 
-    // Auto-login check
     if (token) {
         showApp();
     } else {

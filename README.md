@@ -1,156 +1,88 @@
-# 📚 Study Planner
+# Study Planner
 
-A backend-focused study management system that helps students organize subjects, track tasks, and log study sessions — all behind a secure, token-based API.
+> **Live:** [https://sesd-project-1.onrender.com](https://sesd-project-1.onrender.com)
 
-Built with **Node.js**, **TypeScript**, **Express**, and **MongoDB**.
+A study management app I built to learn backend architecture. It lets you manage subjects, tasks, and study sessions through a REST API with JWT auth and a simple frontend.
 
----
+## Stack
 
-## What It Does
+- **Backend:** Node.js, TypeScript, Express v5, MongoDB (Mongoose)
+- **Auth:** JWT tokens + bcrypt hashing
+- **Frontend:** Plain HTML, CSS, JS — dark theme SPA
 
-- **Users** register and log in securely (JWT + bcrypt)
-- **Subjects** represent study areas (Math, History, etc.)
-- **Tasks** are study goals linked to subjects
-- **Study Sessions** track real study activity with a live timer and auto-calculated duration
-
-All data is user-specific — one user can never see another's data.
-
----
-
-## Tech Stack
-
-| Layer       | Technology                      |
-|-------------|----------------------------------|
-| Runtime     | Node.js + TypeScript             |
-| Framework   | Express.js (v5)                  |
-| Database    | MongoDB + Mongoose               |
-| Auth        | JWT + bcrypt                     |
-| Frontend    | Vanilla HTML/CSS/JS (dark theme) |
-
----
-
-## Project Structure
-
-```
-src/
-├── controllers/     # Handle HTTP requests
-├── services/        # Business logic
-├── repositories/    # Database queries
-├── models/          # Mongoose schemas
-├── routes/          # API route definitions
-├── middlewares/      # Auth & error handling
-├── config/          # DB connection
-├── app.ts           # Express setup
-└── server.ts        # Entry point
-
-public/              # Frontend (served as static files)
-├── index.html
-├── css/style.css
-└── js/app.js
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v18+)
-- MongoDB (local or [Atlas](https://www.mongodb.com/atlas))
-
-### Setup
+## How to run locally
 
 ```bash
-# Clone the repo
 git clone https://github.com/gothamsidd/sesd-project-1.git
 cd sesd-project-1
-
-# Install dependencies
 npm install
+```
 
-# Create your environment file
+Copy the example env file and fill in your values:
+
+```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your MongoDB connection string and a JWT secret:
-
-```env
-PORT=3000
-MONGO_URI=mongodb+srv://your_user:your_pass@cluster0.mongodb.net/study-planner
-JWT_SECRET=some_random_secret_string
-```
-
-### Run
+You'll need a MongoDB connection string (local or Atlas) and any string for the JWT secret. Then:
 
 ```bash
 npm run dev
 ```
 
-Open **http://localhost:3000** in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
----
+## Project layout
 
-## API Endpoints
+```
+src/
+  controllers/    → handle requests
+  services/       → business logic
+  repositories/   → database queries
+  models/         → mongoose schemas
+  middlewares/     → auth + error handling
+  routes/         → endpoint definitions
+  config/db.ts    → mongo connection
+  app.ts          → express config
+  server.ts       → entry point
 
-All routes except auth require a `Bearer` token in the `Authorization` header.
+public/           → frontend served by express
+```
 
-### Auth
-| Method | Route                  | Description         |
-|--------|------------------------|---------------------|
-| POST   | `/api/auth/register`   | Create an account   |
-| POST   | `/api/auth/login`      | Login, get JWT      |
+The idea is to keep things separated — controllers don't touch the database directly, services don't know about HTTP, and so on.
 
-### Subjects
-| Method | Route                  | Description              |
-|--------|------------------------|--------------------------|
-| GET    | `/api/subjects`        | Get your subjects        |
-| POST   | `/api/subjects`        | Create a subject         |
-| DELETE | `/api/subjects/:id`    | Delete a subject         |
+## API
 
-### Tasks
-| Method | Route                  | Description              |
-|--------|------------------------|--------------------------|
-| GET    | `/api/tasks`           | Get your tasks           |
-| POST   | `/api/tasks`           | Create a task            |
-| PUT    | `/api/tasks/:id`       | Update a task            |
-| DELETE | `/api/tasks/:id`       | Delete a task            |
+All routes except register/login need a `Bearer <token>` header.
 
-### Study Sessions
-| Method | Route                     | Description              |
-|--------|---------------------------|--------------------------|
-| POST   | `/api/sessions/start`     | Start a session          |
-| PUT    | `/api/sessions/:id/end`   | End a session            |
-| GET    | `/api/sessions`           | Get session history      |
+**Auth**
+- `POST /api/auth/register` — create account
+- `POST /api/auth/login` — get token
 
----
+**Subjects**
+- `GET /api/subjects` — list
+- `POST /api/subjects` — create
+- `DELETE /api/subjects/:id` — remove
 
-## Architecture
+**Tasks**
+- `GET /api/tasks` — list
+- `POST /api/tasks` — create (validates subject ownership)
+- `PUT /api/tasks/:id` — update
+- `DELETE /api/tasks/:id` — remove
 
-The backend follows a **layered architecture** to keep things clean and maintainable:
+**Sessions**
+- `POST /api/sessions/start` — begin a session
+- `PUT /api/sessions/:id/end` — end it (calculates duration)
+- `GET /api/sessions` — history
 
-1. **Controllers** — receive requests, return responses
-2. **Services** — hold the business logic (e.g. "does this subject belong to the user?")
-3. **Repositories** — talk to MongoDB
-4. **Models** — define the data shape (Mongoose schemas)
+## Things I focused on
 
-Every query filters by `userId` to enforce strict data isolation.
+- Every DB query filters by userId so users only see their own stuff
+- Tasks can only be created under subjects you own
+- Session duration is calculated server-side in seconds
+- Global error handler catches everything and sends clean JSON responses
+- The frontend has a live stopwatch that syncs with the backend
 
----
+## Deploy
 
-## Frontend
-
-A single-page app with a dark theme, served directly from the Express server. It includes:
-
-- Login / Register flow
-- Dashboard with stats
-- Subject management
-- Task list with completion toggles
-- Study session timer with history
-
-No framework — just HTML, CSS, and JavaScript.
-
----
-
-## License
-
-ISC
+Deployed on Render with `npm run build` (compiles TS) and `npm start` (runs compiled JS). Environment variables are set in the Render dashboard.
